@@ -37,8 +37,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String jwtToken=jwtUtils.parseJwt(request);
-        if(jwtToken == null && !request.getRequestURI().equals(AuthZConstant.allowedURI)) {
-            //throw new UnAuthorizedException("JWT Token Missing");
+        if(AuthZConstant.allowedURI.contains(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
         }
         try {
 
