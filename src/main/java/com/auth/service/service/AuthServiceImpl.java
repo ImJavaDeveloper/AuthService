@@ -49,9 +49,10 @@ public class AuthServiceImpl implements AuthService {
                 throw new InvalidCredentialException("Invalid Credential");
             }
             log.error("Getting exception while authenticating user:{}",ex);
+            return new TokenResponse(null,false, userLoginRequest.getUsername());
         }
         
 
-        return new TokenResponse(jwtToken,true);
+        return new TokenResponse(jwtToken,true, userLoginRequest.getUsername());
     }
 }

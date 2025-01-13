@@ -11,7 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth/api")
+@RequestMapping("/api/v1")
 @Slf4j
 public class AuthContoller {
 
@@ -28,10 +28,10 @@ public class AuthContoller {
         this.authService=authService;
     }
     @GetMapping("/validate")
-    public ResponseEntity<TokenResponse> authenticates(HttpServletRequest request)
+    public ResponseEntity<TokenResponse> validate(HttpServletRequest request)
     {
        String token= jwtUtils.parseJwt(request);
-       return ResponseEntity.ok(new TokenResponse(token,jwtUtils.validateJwtToken(token)));
+       return ResponseEntity.ok(new TokenResponse(token,jwtUtils.validateJwtToken(token),jwtUtils.getUserNameFromJwtToken(token)));
     }
 
     @PostMapping("/login")

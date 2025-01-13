@@ -11,4 +11,5 @@ public class TokenResponse {
 
    private String token;
    private boolean isAuthenticated;
+   private String username;
 }

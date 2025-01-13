@@ -36,11 +36,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String jwtToken=jwtUtils.parseJwt(request);
         if(AuthZConstant.allowedURI.contains(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
+        String jwtToken=jwtUtils.parseJwt(request);
         try {
 
             if(jwtToken != null && jwtUtils.validateJwtToken(jwtToken))
