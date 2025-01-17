@@ -4,6 +4,7 @@ import com.auth.service.exception.InvalidCredentialException;
 import com.auth.service.models.response.TokenResponse;
 import com.auth.service.models.request.UserLoginRequest;
 import com.auth.service.utils.JWTUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
@@ -37,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     userLoginRequest.getUsername(),userLoginRequest.getPassword()));
+            log.info("authentication:{}",authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             jwtToken=jwtUtils.generateJWTToken(authentication);
         }

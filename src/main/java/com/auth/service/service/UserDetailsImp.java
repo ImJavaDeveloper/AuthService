@@ -24,11 +24,11 @@ public class UserDetailsImp implements UserDetails {
 
     public static UserDetailsImp build(UserCredential userCredential)
     {
-        /*List<GrantedAuthority> authorities= userCredential.getRoles()
+        List<GrantedAuthority> authorities= userCredential.getRoles()
                 .stream().map((user->new SimpleGrantedAuthority(user.getRoleName())))
-                .collect(Collectors.toUnmodifiableList());*/
+                .collect(Collectors.toUnmodifiableList());
 
-        return new UserDetailsImp(userCredential.getUsername(), userCredential.getPassword(),null);
+        return new UserDetailsImp(userCredential.getUsername(), userCredential.getPassword(),authorities);
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

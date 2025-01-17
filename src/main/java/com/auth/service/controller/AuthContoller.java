@@ -80,18 +80,4 @@ public class AuthContoller {
         return ResponseEntity.ok(tokenResponse);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<UserLoginRequest> create(@RequestBody UserLoginRequest userLoginRequest)
-    {
-        UserCredential userCredential=new UserCredential();
-        userCredential.setUsername(userLoginRequest.getUsername());
-        userCredential.setPassword(userLoginRequest.getPassword());
-        Role role=roleRepository.findByRoleId(2);
-        log.info(role.toString());
-        Set<Role> roles=new HashSet<>();
-        roles.add(role);
-        userCredential.setRoles(roles);
-        userCredRepository.save(userCredential);
-        return ResponseEntity.ok(userLoginRequest);
-    }
 }
