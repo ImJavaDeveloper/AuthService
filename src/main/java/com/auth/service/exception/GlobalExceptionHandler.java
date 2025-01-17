@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleInvalidCredentialException(InvalidCredentialException ex, WebRequest req)
     {
         ErrorDetails errorDetails=new ErrorDetails(
-                HttpStatus.NOT_FOUND.toString(),
+                HttpStatus.UNAUTHORIZED.toString(),
                 ex.getMessage(),
                 LocalDateTime.now(),
                 req.getDescription(false)

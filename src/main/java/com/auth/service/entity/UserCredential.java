@@ -6,26 +6,22 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name ="userCred" )
-@Table(name="users")
+@Entity
+@Table(name="users",uniqueConstraints ={@UniqueConstraint(columnNames = "username")} )
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
 public class UserCredential {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private String username;
 
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinTable(
             name="user_roles",
             joinColumns = @JoinColumn(name="username"),
             inverseJoinColumns = @JoinColumn(name = "roleId")
     )
-    private Set<Roles> userRoles=new HashSet<>();
+    private Set<Role> roles=new HashSet<>();
 
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 @Component
 @Slf4j
@@ -36,26 +37,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if(AuthZConstant.allowedURI.contains(request.getRequestURI())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        String jwtToken=jwtUtils.parseJwt(request);
-        try {
-
-            if(jwtToken != null && jwtUtils.validateJwtToken(jwtToken))
-            {
-                String username=jwtUtils.getUserNameFromJwtToken(jwtToken);
-                UserDetails userDetails= userCredService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (Exception ex)
-        {
-            log.error("Cannot set user authentication: {}", ex);
-        }
+       log.info("Path:{}",request.getRequestURI());
+       log.info("Remote User:{}",request.getHeader("REMOTE_USER"));
+        log.info("Remote User:{}",request.getHeader("remote_user"));
         filterChain.doFilter(request, response);
     }
 }
