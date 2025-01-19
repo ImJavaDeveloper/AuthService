@@ -8,7 +8,7 @@ WORKDIR /Users/rahatali/Desktop
 COPY target/AuthService-0.0.1-SNAPSHOT.jar AuthService.jar
 
 # Expose the port on which the application runs
-EXPOSE 8080
+EXPOSE 8081
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "AuthService.jar"]

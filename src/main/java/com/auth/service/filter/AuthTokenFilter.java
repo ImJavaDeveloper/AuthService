@@ -37,8 +37,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-       log.info("Path:{}",request.getRequestURI());
-       log.info("Remote User:{}",request.getHeader("REMOTE_USER"));
+        log.info("Path:{}",request.getRequestURI());
+        log.info("Remote User:{}",request.getHeader("REMOTE_USER"));
         log.info("Remote User:{}",request.getHeader("remote_user"));
         filterChain.doFilter(request, response);
     }
