@@ -1,5 +1,6 @@
 package com.auth.service.controller;
 
+import com.auth.service.exception.ErrorDetails;
 import com.auth.service.models.response.TokenResponse;
 import com.auth.service.models.request.UserLoginRequest;
 import com.auth.service.repository.RoleRepository;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -81,7 +84,12 @@ public class AuthController {
         if(tokenResponse.isAuthenticated())
         return ResponseEntity.ok(tokenResponse);
         else
-            return new ResponseEntity<>("Invalid User",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ErrorDetails(
+                    HttpStatus.UNAUTHORIZED.toString(),
+                    "Invalid User",
+                    LocalDateTime.now(),
+                    "Either Username or Password is not correct"
+            ),HttpStatus.UNAUTHORIZED);
     }
 
 }

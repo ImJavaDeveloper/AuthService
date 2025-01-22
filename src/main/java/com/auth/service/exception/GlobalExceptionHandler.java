@@ -41,4 +41,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails,HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetails> handleException(Exception ex, HttpServletRequest req)
+    {
+        ErrorDetails errorDetails=new ErrorDetails(
+                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                ex.getMessage(),
+                LocalDateTime.now(),
+                req.getRequestURI());
+        return new ResponseEntity<>(errorDetails,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
