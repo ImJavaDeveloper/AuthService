@@ -22,6 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +36,9 @@ public class SecurityConfig  {
     private AuthenticationEntryPoint unAuthorizedHandler;
     @Autowired
     private AppAccessDeniedHandler appAccessDeniedHandler;
+    @Autowired
+    private CustomCorsConfiguration customCorsConfiguration;
+
     public SecurityConfig(AuthTokenFilter authTokenFilter, UserDetailsService userDetailsService)
     {
         this.authTokenFilter=authTokenFilter;
@@ -41,13 +47,18 @@ public class SecurityConfig  {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.
-            csrf(AbstractHttpConfigurer::disable)
-
+    return http
+           // .cors(cors -> cors.configurationSource(customCorsConfiguration))
+            .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(request-> request
-                             .requestMatchers("/api/v1/**","/api/v1/validate","/actuator/**","/v3/api-docs/**","/favicon.ico","/swagger-ui/**","/swagger-ui.html").permitAll()
-                             .anyRequest().authenticated()
-                    )
+                .requestMatchers("/api/v1/login",
+                        "/api/v1/validate","/actuator/**",
+                        "/v3/api-docs","/favicon.ico",
+                        "/swagger-ui/**","/swagger-ui.html","/v3/api-docs/swagger-config","/v3/api-docs.yaml"
+                ).permitAll())
+            .authorizeHttpRequests(request->request
+                    .anyRequest().authenticated()
+            )
             .authenticationProvider(authenticationProvider())
             .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)

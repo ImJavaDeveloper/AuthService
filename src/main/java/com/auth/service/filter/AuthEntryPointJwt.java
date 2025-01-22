@@ -19,7 +19,7 @@ public class AuthEntryPointJwt
         response.setContentType("application/json");
         log.info(String.valueOf(response.getStatus()));
         log.info("Request Path:{}",request.getRequestURI());
-        //log.info("authException:{}",authException.fillInStackTrace());
+        log.info("authException:{}",authException.fillInStackTrace());
         if(response.getStatus() == 404) {
             response.getWriter().write("{\"error\": \"Resource Not Found !!\"," +
                     " \"status\": \"" + response.getStatus() + "\"}");

@@ -1,7 +1,5 @@
 package com.auth.service.controller;
 
-import com.auth.service.entity.Role;
-import com.auth.service.entity.UserCredential;
 import com.auth.service.models.response.TokenResponse;
 import com.auth.service.models.request.UserLoginRequest;
 import com.auth.service.repository.RoleRepository;
@@ -9,27 +7,23 @@ import com.auth.service.repository.UserCredRepository;
 import com.auth.service.service.AuthService;
 import com.auth.service.service.UserProfileServiceImpl;
 import com.auth.service.utils.JWTUtils;
-import com.netflix.discovery.converters.Auto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
-@Tag(name="Note", description="End points for note service")
-public class AuthContoller {
+@Tag(name="AuthService", description="End points for Login service")
+public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtils jwtUtils;
@@ -40,14 +34,21 @@ public class AuthContoller {
     @Autowired
     private RoleRepository roleRepository;
 
-    public AuthContoller(AuthenticationManager authenticationManager,
-                         JWTUtils jwtUtils,
-                         AuthService authService)
+    public AuthController(AuthenticationManager authenticationManager,
+                          JWTUtils jwtUtils,
+                          AuthService authService)
     {
         this.authenticationManager=authenticationManager;
         this.jwtUtils=jwtUtils;
         this.authService=authService;
     }
+
+    @Operation(
+            summary = "Validate JWT Token ",
+            description = "JWT Token Validation ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token Validated")
+    })
     @GetMapping("/validate")
     public ResponseEntity<TokenResponse> validate(HttpServletRequest request)
     {
@@ -68,16 +69,19 @@ public class AuthContoller {
        return ResponseEntity.ok(tokenResponse);
     }
     @Operation(
-            summary = "Fetch all Notes",
-            description = "fetches all Notes entities and their data from data source")
+            summary = "Login With Valid Credential",
+            description = "User should be able to login with valid credential and it should return valid JWT Token")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation")
+            @ApiResponse(responseCode = "200", description = "successful Login")
     })
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> authenticate(@RequestBody UserLoginRequest userLoginRequest)
+    public ResponseEntity<?> authenticate(@RequestBody UserLoginRequest userLoginRequest)
     {
         TokenResponse tokenResponse=authService.authenticateUser(userLoginRequest);
+        if(tokenResponse.isAuthenticated())
         return ResponseEntity.ok(tokenResponse);
+        else
+            return new ResponseEntity<>("Invalid User",HttpStatus.UNAUTHORIZED);
     }
 
 }

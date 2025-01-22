@@ -31,10 +31,11 @@ public class JWTUtils {
     {
         UserDetailsImp userDetailsImp= (UserDetailsImp) authentication.getPrincipal();
         List<String> listOfRoles=userDetailsImp.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        Map map=new HashMap();
-        map.put("roles",listOfRoles);
+
+        Map<String, Object> claimMap=new HashMap<>();
+        claimMap.put("roles",listOfRoles);
         return Jwts.builder()
-                .setClaims(map)
+                .setClaims(claimMap)
                 .setSubject(userDetailsImp.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime()+jwtExpirationMS))

@@ -7,12 +7,12 @@ import com.auth.service.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtils=jwtUtils;
     }
 
+    @Cacheable("token")
     @Override
     public TokenResponse authenticateUser(UserLoginRequest userLoginRequest) {
         Authentication authentication = null;

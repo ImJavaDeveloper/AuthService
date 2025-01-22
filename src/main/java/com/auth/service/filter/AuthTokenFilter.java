@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,6 +41,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         log.info("Path:{}",request.getRequestURI());
         log.info("Remote User:{}",request.getHeader("REMOTE_USER"));
         log.info("Remote User:{}",request.getHeader("remote_user"));
+        if(request.getRequestURI().equals("/v3/api-docs"))
+            filterChain.doFilter(request,response);
+
         filterChain.doFilter(request, response);
     }
 }
